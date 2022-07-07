@@ -21,6 +21,7 @@ const MOCK_TOTAL = 100;
 
 const App = () => {
   const inputRef = React.useRef(null);
+  const tableRef = React.useRef();
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(5);
   const [rows, setRows] = React.useState([]);
@@ -28,18 +29,18 @@ const App = () => {
   const [loading, setLoading] = React.useState(false);
   const [gender, setGender] = React.useState('all');
 
+  const [sortOrder, setSortOrder] = React.useState();
+  const [sortBy, setSortBy] = React.useState();
+
   const columns = [
     {
       label: 'Username',
-      sortable: true,
-      sortField: '',
       name: 'login.username',
       minWidth: 110,
     },
     {
       label: 'Name',
-      sortable: true,
-      sortField: '',
+      sort: true,
       name: 'name',
       minWidth: 110,
       cell: ({ item }) => {
@@ -48,22 +49,19 @@ const App = () => {
     },
     {
       label: 'Email',
-      sortable: true,
-      sortField: '',
+      sort: true,
       name: 'email',
       minWidth: 110,
     },
     {
       label: 'Gender',
-      sortable: true,
-      sortField: '',
+      sort: true,
       name: 'gender',
       minWidth: 110,
     },
     {
       label: 'Registered Date',
-      sortable: true,
-      sortField: '',
+      sort: true,
       name: 'registered.date',
       minWidth: 110,
       cell: ({ item }) => {
@@ -88,6 +86,8 @@ const App = () => {
         pageSize,
         keyword: keyword !== '' ? keyword : undefined,
         gender: gender !== 'all' ? gender : undefined,
+        sortBy: sortBy !== '' ? sortBy : undefined,
+        sortOrder: sortBy ? (sortOrder !== '' ? sortOrder : undefined) : undefined,
       };
       const res = await getUser(params);
       const result = res.data.results;
@@ -103,14 +103,22 @@ const App = () => {
     setPage(newPage + 1);
   };
 
+  const resetSort = () => {
+    setSortOrder();
+    setSortBy();
+    tableRef.current.reset();
+  };
+
   const handleChangeRowsPerPage = (event) => {
-    setPageSize(parseInt(event.target.value, 10));
+    setPageSize(parseInt(event.target.value, 5));
     setPage(1);
+    resetSort();
   };
 
   const handleSearchDebounce = debounceEvent((query) => {
     setKeyword(query);
     setPage(1);
+    resetSort();
   }, 1000);
 
   const handleSearch = (e) => {
@@ -121,6 +129,7 @@ const App = () => {
   const handleFilterGender = (e) => {
     setGender(e.target.value);
     setPage(1);
+    resetSort();
   };
 
   const handleReset = () => {
@@ -129,11 +138,17 @@ const App = () => {
     setPageSize(5);
     setKeyword();
     inputRef.current.value = '';
+    resetSort();
+  };
+
+  const handleSort = (order, orderBy) => {
+    setSortOrder(order);
+    setSortBy(orderBy);
   };
 
   React.useEffect(() => {
     loadData();
-  }, [page, pageSize, keyword, gender]);
+  }, [page, pageSize, keyword, gender, sortOrder, sortBy]);
 
   return (
     <Box>
@@ -182,7 +197,13 @@ const App = () => {
           </Button>
         </Grid>
       </Grid>
-      <ReusableTable rows={rows} columns={columns} loading={loading} />
+      <ReusableTable
+        ref={tableRef}
+        rows={rows}
+        columns={columns}
+        loading={loading}
+        onSorting={handleSort}
+      />
       <TablePagination
         component="div"
         count={MOCK_TOTAL}

@@ -14,7 +14,10 @@ import { getProp } from 'helpers/object';
 import TableSkeleton from 'components/TableSkeleton';
 import useStyles from './styles';
 
-const ReusableTable = ({ columns, rows, defaultOrderBy, defaultOrder, loading, ...props }) => {
+const ReusableTable = (
+  { columns, rows, defaultOrderBy, defaultOrder, loading, onSorting, ...props },
+  ref,
+) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState(defaultOrder);
   const [orderBy, setOrderBy] = React.useState(defaultOrderBy);
@@ -29,13 +32,24 @@ const ReusableTable = ({ columns, rows, defaultOrderBy, defaultOrder, loading, .
   const handleRequestSort = (prop) => {
     if (orderBy === prop && order === 'asc') {
       setOrder('desc');
+      onSorting(prop, 'desc');
     } else if (orderBy === prop && order === 'desc') {
       setOrder('');
+      onSorting(prop, '');
     } else {
       setOrder('asc');
+      onSorting(prop, 'asc');
     }
     setOrderBy(prop);
   };
+
+  React.useImperativeHandle(ref, () => ({
+    reset: () => {
+      console.log('reset');
+      setOrder();
+      setOrderBy();
+    },
+  }));
 
   if (loading) return <TableSkeleton data-testid="table-skeleton" theme="blue" />;
 
@@ -60,7 +74,6 @@ const ReusableTable = ({ columns, rows, defaultOrderBy, defaultOrder, loading, .
                     active={orderBy === column.name && !!order}
                     direction={order}
                     data-testid={`table-head-${column.name}`}
-                    hideSortIcon
                     onClick={() => handleRequestSort(column.name)}>
                     {column.label}
                   </TableSortLabel>
@@ -101,6 +114,7 @@ ReusableTable.propTypes = {
   columns: T.arrayOf(T.any),
   rows: T.arrayOf(T.any),
   loading: T.bool,
+  onSorting: T.func,
 };
 
 ReusableTable.defaultProps = {
@@ -109,6 +123,7 @@ ReusableTable.defaultProps = {
   columns: [],
   rows: [],
   loading: false,
+  onSorting: () => {},
 };
 
-export default ReusableTable;
+export default React.forwardRef(ReusableTable);
