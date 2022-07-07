@@ -9,6 +9,7 @@
       "ecmaVersion": 2018
   },
   "rules": {
+      "react-hooks/exhaustive-deps": 0,
       "prettier/prettier": [
           "error",
           {
