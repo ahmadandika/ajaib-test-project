@@ -19,7 +19,7 @@ import { debounceEvent } from 'helpers/debounce';
 
 const MOCK_TOTAL = 100;
 
-const App = () => {
+const Home = () => {
   const inputRef = React.useRef(null);
   const tableRef = React.useRef();
   const [page, setPage] = React.useState(1);
@@ -106,7 +106,7 @@ const App = () => {
   const resetSort = () => {
     setSortOrder();
     setSortBy();
-    tableRef.current.reset();
+    tableRef.current?.reset();
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -137,7 +137,9 @@ const App = () => {
     setPage(1);
     setPageSize(5);
     setKeyword();
-    inputRef.current.value = '';
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
     resetSort();
   };
 
@@ -163,6 +165,7 @@ const App = () => {
               id="input-search"
               type="text"
               placeholder="Search ..."
+              data-testid="search-input"
               onChange={handleSearch}
               endAdornment={
                 <InputAdornment position="end">
@@ -183,6 +186,7 @@ const App = () => {
               defaultValue="all"
               labelId="gender-select-label"
               id="gender-select"
+              data-testid="filter-gender"
               value={gender}
               onChange={handleFilterGender}>
               <MenuItem value="all">All</MenuItem>
@@ -192,7 +196,12 @@ const App = () => {
           </FormControl>
         </Grid>
         <Grid item md={3} sx={{ display: 'flex', alignItems: 'flex-end' }}>
-          <Button variant="outlined" size="large" type="button" onClick={handleReset}>
+          <Button
+            variant="outlined"
+            size="large"
+            type="button"
+            onClick={handleReset}
+            data-testid="reset-btn">
             Reset
           </Button>
         </Grid>
@@ -203,18 +212,24 @@ const App = () => {
         columns={columns}
         loading={loading}
         onSorting={handleSort}
+        data-testid="table"
       />
-      <TablePagination
-        component="div"
-        count={MOCK_TOTAL}
-        page={page - 1}
-        onPageChange={handleChangePage}
-        rowsPerPage={pageSize}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        rowsPerPageOptions={[5, 10, 15]}
-      />
+      {rows.length > 0 ? (
+        <TablePagination
+          data-testid="table-pagination"
+          component="div"
+          count={MOCK_TOTAL}
+          page={page - 1}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 15]}
+        />
+      ) : (
+        ''
+      )}
     </Box>
   );
 };
 
-export default App;
+export default Home;

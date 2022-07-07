@@ -19,8 +19,8 @@ const TableSkeleton = () => {
         <Table>
           <TableHead>
             <TableRow>
-              {[...Array(4)].map((_, i) => (
-                <TableCell key={Number(i)}>
+              {[...Array(5)].map((_, i) => (
+                <TableCell key={Number(i)} data-testid="table-column">
                   <Skeleton className={clsx(classes.skeleton, classes.head)} />
                 </TableCell>
               ))}
@@ -28,9 +28,9 @@ const TableSkeleton = () => {
           </TableHead>
           <TableBody>
             {[...Array(6)].map((_, j) => (
-              <TableRow key={Number(j)}>
-                {[...Array(4)].map((_, i) => (
-                  <TableCell key={Number(i)}>
+              <TableRow key={Number(j)} data-testid="table-row">
+                {[...Array(5)].map((_, i) => (
+                  <TableCell key={Number(i)} data-testid="table-cell">
                     <Skeleton className={clsx(classes.skeleton)} />
                   </TableCell>
                 ))}
