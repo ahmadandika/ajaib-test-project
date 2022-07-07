@@ -1,7 +1,8 @@
 import React from 'react';
 import ReusableTable from 'components/ReusableTable';
 import { getUser } from 'services';
-import { Container } from '@mui/material';
+import { Box } from '@mui/material';
+import Filter from './components/Filter';
 
 const App = () => {
   const [rows, setRows] = React.useState([]);
@@ -73,9 +74,10 @@ const App = () => {
   }, []);
 
   return (
-    <Container maxWidth="lg">
+    <Box>
+      <Filter />
       <ReusableTable rows={rows} columns={columns} loading={false} />
-    </Container>
+    </Box>
   );
 };
 
