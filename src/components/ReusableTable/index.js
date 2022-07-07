@@ -1,6 +1,5 @@
 import React from 'react';
 import T from 'prop-types';
-import { styled } from '@mui/material/styles';
 import {
   Box,
   TableContainer,
@@ -10,22 +9,13 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
-  Skeleton,
-  tableCellClasses,
 } from '@mui/material';
 import { getProp } from 'helpers/object';
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
+import TableSkeleton from 'components/TableSkeleton';
+import useStyles from './styles';
 
 const ReusableTable = ({ columns, rows, defaultOrderBy, defaultOrder, loading, ...props }) => {
+  const classes = useStyles();
   const [order, setOrder] = React.useState(defaultOrder);
   const [orderBy, setOrderBy] = React.useState(defaultOrderBy);
 
@@ -47,7 +37,7 @@ const ReusableTable = ({ columns, rows, defaultOrderBy, defaultOrder, loading, .
     setOrderBy(prop);
   };
 
-  if (loading) return <Skeleton data-testid="table-skeleton" />;
+  if (loading) return <TableSkeleton data-testid="table-skeleton" theme="blue" />;
 
   if (!rows.length && !loading) {
     return <Box>Empty</Box>;
@@ -60,7 +50,8 @@ const ReusableTable = ({ columns, rows, defaultOrderBy, defaultOrder, loading, .
           <TableRow>
             {/* Dynamic generation of the header cells from the columns definitions */}
             {columns.map((column) => (
-              <StyledTableCell
+              <TableCell
+                className={classes.head}
                 key={column.name}
                 width={column.width}
                 style={{ minWidth: column.minWidth, maxWidth: column.maxWidth }}>
@@ -76,7 +67,7 @@ const ReusableTable = ({ columns, rows, defaultOrderBy, defaultOrder, loading, .
                 ) : (
                   column.label
                 )}
-              </StyledTableCell>
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -88,13 +79,13 @@ const ReusableTable = ({ columns, rows, defaultOrderBy, defaultOrder, loading, .
               data-testid={`body-row-${index}`}
               data-testgroup="body-row">
               {columns.map((column) => (
-                <StyledTableCell
+                <TableCell
                   title={column.titleAttr ? item[column.name] : ''}
                   key={column.name}
                   numeric={column.isNumeric}
                   style={{ minWidth: column.minWidth, maxWidth: column.maxWidth }}>
                   {renderCell(item, column, index)}
-                </StyledTableCell>
+                </TableCell>
               ))}
             </TableRow>
           ))}
