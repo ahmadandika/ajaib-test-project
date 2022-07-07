@@ -27,8 +27,8 @@ const TableSkeleton = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {[...Array(6)].map((key) => (
-              <TableRow key={key}>
+            {[...Array(6)].map((_, j) => (
+              <TableRow key={Number(j)}>
                 {[...Array(4)].map((_, i) => (
                   <TableCell key={Number(i)}>
                     <Skeleton className={clsx(classes.skeleton)} />
