@@ -110,7 +110,7 @@ const Home = () => {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setPageSize(parseInt(event.target.value, 5));
+    setPageSize(parseInt(event.target.value, 10));
     setPage(1);
     resetSort();
   };
