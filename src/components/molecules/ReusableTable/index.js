@@ -10,9 +10,9 @@ import {
   TableSortLabel,
 } from '@mui/material';
 import { getProp } from 'helpers/object';
-import TableSkeleton from 'components/TableSkeleton';
+import TableSkeleton from 'components/molecules/TableSkeleton';
 import useStyles from './styles';
-import EmptyHolder from 'components/EmptyHolder';
+import EmptyHolder from 'components/molecules/EmptyHolder';
 
 const ReusableTable = React.forwardRef(
   ({ columns, rows, defaultOrderBy, defaultOrder, loading, onSorting, ...props }, ref) => {

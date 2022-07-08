@@ -1,5 +1,5 @@
 import React from 'react';
-import ReusableTable from 'components/ReusableTable';
+import ReusableTable from 'components/molecules/ReusableTable';
 import { getUser } from 'services';
 import {
   Box,
@@ -13,8 +13,8 @@ import {
   TablePagination,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import InputBase from 'components/InputBase';
-import SelectBase from 'components/SelectBase';
+import InputBase from 'components/atoms/InputBase';
+import SelectBase from 'components/atoms/SelectBase';
 import { debounceEvent } from 'helpers/debounce';
 
 const MOCK_TOTAL = 100;
